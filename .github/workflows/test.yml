@@ -1,9 +1,6 @@
 on:
   workflow_dispatch:
 name: build
-env:
-    GOPROXY: https://proxy.golang.org
-    GO111MODULE: on
 permissions:
   contents: read
 jobs:
@@ -12,12 +9,13 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+    - run: apt install g++
     - name: Install Go
       uses: actions/setup-go@268d8c0ca0432bb2cf416faae41297df9d262d7f
       with:
-        go-version: 1.20
+        go-version: 1.20.3
     - name: Build
-      run: CGO_ENABLED=1 GOOS=windows GOARCH=arm64 go build -tags extended
+      run: CGO_ENABLED=1 GOOS=windows GOARCH=arm64 GOARM=7 go build -tags extended
     - name: Upload
       uses: actions/upload-artifact@v3.1.2
       with:
